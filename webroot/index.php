@@ -42,7 +42,7 @@ const check = () => {
 <td><input type="text" name="desc[]" value="<?= $url['desc'] ?>"><input type="hidden" name="id[]" value="<?= $url['id'] ?>"></td>
 <td><input type="text" name="url[]" value="<?= $url['url'] ?>"></td>
 <td><input type="text" name="timeout[]" value="<?= $url['timeout'] ?>"></td>
-<td><?= $url['status_msg'] ?></td>
+<td><?= $url['message'] ?></td>
 <td><button type="button" onclick="delete_func(<?= $url['id'] ?>);">Del</button></td>
 </tr>
 <?php endwhile; ?>

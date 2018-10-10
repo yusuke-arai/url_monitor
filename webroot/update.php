@@ -18,7 +18,7 @@ if (!empty($_REQUEST)) {
             $stmt->close();
             unset($stmt);
         } else {
-            $stmt = $db->prepare("INSERT INTO urls (desc, url, timeout, status_code, status_msg) VALUES (:desc, :url, :timeout, -1, '-')");
+            $stmt = $db->prepare("INSERT INTO urls (desc, url, timeout, status_code, message) VALUES (:desc, :url, :timeout, -1, '-')");
             $stmt->bindValue(':desc', $_REQUEST["desc"][$index], SQLITE3_TEXT);
             $stmt->bindValue(':url', $_REQUEST["url"][$index], SQLITE3_TEXT);
             $stmt->bindValue(':timeout', intval($_REQUEST["timeout"][$index]), SQLITE3_INTEGER);

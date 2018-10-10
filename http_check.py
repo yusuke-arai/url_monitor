@@ -34,8 +34,7 @@ https://pandora.youworks.com/url_check/
     mail_data['To'] = ','.join(mail_to)
     mail_data['Subject'] = Header(mail_subject, 'utf-8')
 
-
-    s = smtplib.SMTP('localhost')
+    s = smtplib.SMTP(smtp_host, smtp_port)
     s.sendmail(mail_from, mail_to, mail_data.as_string())
     s.quit()
 
@@ -59,19 +58,39 @@ def main():
 
         db = sqlite3.connect(db_file, isolation_level='EXCLUSIVE')
         if 'curl_error_code' in res:
-            db.execute("INSERT INTO logs (url_id, date, status_code, status_msg) VALUES (:url_id, :date, :status_code, :status_msg);",
-                {"url_id": id, "date": date, "status_code": res['curl_error_code'], "status_msg": res['curl_error_msg']})
-            db.execute("UPDATE urls SET status_code = :status_code, status_msg = :status_msg WHERE id = :id;",
-                {"id": id, "status_code": res['curl_error_code'], "status_msg": res['curl_error_msg']})
+            db.execute("INSERT INTO logs (url_id, date, curl_status_code, message) VALUES (:url_id, :date, :curl_status_code, :message);",
+                {"url_id": id, "date": date, "curl_status_code": res['curl_error_code'], "message": res['curl_error_msg']})
+            db.execute("UPDATE urls SET status_code = :status_code, message = :message WHERE id = :id;",
+                {"id": id, "status_code": res['curl_error_code'], "message": res['curl_error_msg']})
 
             if (prev_status <= 0):
                 send_mail(config['mail_from'], config['mail_to'], desc, url, date, res['curl_error_msg'], True, smtp_host=config['smtp_host'], smtp_port=config['smtp_port'])
+
+        elif res['response_code'] >= 300:
+            db.execute("INSERT INTO logs (url_id, date, curl_status_code, message, name_lookup_ms, connect_ms, ssl_connect_ms, start_transfer_ms, total_ms) " +
+                    "VALUES (:url_id, :date, :curl_status_code, :message, :name_lookup_ms, :connect_ms, :ssl_connect_ms, :start_transfer_ms, :total_ms);",
+                {
+                    "url_id": id, "date": date, "curl_status_code": 0, "response_code": res['response_code'], "message": '',
+                    "name_lookup_ms": res['name_lookup'], "connect_ms": res['connect'], "ssl_connect_ms": res['ssl_connect'],
+                    "start_transfer_ms": res['start_transfer'], "total_ms": res['total']
+                })
+            msg = 'HTTP status code is ' + str(res['response_code'])
+            db.execute("UPDATE urls SET status_code = :status_code, message = :message WHERE id = :id;",
+                {"id": id, "status_code": res['response_code'], "message": msg})
+
+            if (prev_status <= 0):
+                send_mail(config['mail_from'], config['mail_to'], desc, url, date, msg, True, smtp_host=config['smtp_host'], smtp_port=config['smtp_port'])
+
         else:
-            db.execute("INSERT INTO logs (url_id, date, status_code, status_msg, name_lookup_ms, connect_ms, ssl_connect_ms, start_transfer_ms, total_ms) " +
-                    "VALUES (:url_id, :date, :status_code, :status_msg, :name_lookup_ms, :connect_ms, :ssl_connect_ms, :start_transfer_ms, :total_ms);",
-                {"url_id": id, "date": date, "status_code": 0, "status_msg": '', "name_lookup_ms": res['name_lookup'], "connect_ms": res['connect'], "ssl_connect_ms": res['ssl_connect'], "start_transfer_ms": res['start_transfer'], "total_ms": res['total']})
-            db.execute("UPDATE urls SET status_code = :status_code, status_msg = :status_msg WHERE id = :id;",
-                {"id": id, "status_code": 0, "status_msg": 'Ok'})
+            db.execute("INSERT INTO logs (url_id, date, curl_status_code, message, name_lookup_ms, connect_ms, ssl_connect_ms, start_transfer_ms, total_ms) " +
+                    "VALUES (:url_id, :date, :curl_status_code, :message, :name_lookup_ms, :connect_ms, :ssl_connect_ms, :start_transfer_ms, :total_ms);",
+                {
+                    "url_id": id, "date": date, "curl_status_code": 0, "response_code": res['response_code'],
+                     "message": '', "name_lookup_ms": res['name_lookup'], "connect_ms": res['connect'], "ssl_connect_ms": res['ssl_connect'],
+                    "start_transfer_ms": res['start_transfer'], "total_ms": res['total']
+                })
+            db.execute("UPDATE urls SET status_code = :status_code, message = :message WHERE id = :id;",
+                {"id": id, "status_code": 0, "message": 'Ok'})
 
             if (prev_status > 0):
                 send_mail(config['mail_from'], config['mail_to'], desc, url, date, 'Ok', False, smtp_host=config['smtp_host'], smtp_port=config['smtp_port'])

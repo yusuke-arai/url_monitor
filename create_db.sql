@@ -7,15 +7,16 @@ CREATE TABLE urls (
     url TEXT NOT NULL,
     timeout INTEGER NOT NULL,
     status_code INTEGER NOT NULL,
-    status_msg TEXT NOT NULL
+    message TEXT NOT NULL
 );
 
 CREATE TABLE logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     url_id INTEGER NOT NULL,
     date INTEGER NOT NULL,
-    status_code INTEGER NOT NULL,
-    status_msg TEXT,
+    curl_status_code INTEGER NOT NULL,
+    response_code INTEGER,
+    message TEXT,
     name_lookup_ms INTEGER,
     connect_ms INTEGER,
     ssl_connect_ms INTEGER,
