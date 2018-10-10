@@ -1,0 +1,4 @@
+[submodule "simple_http_check"]
+	path = simple_http_check
+	url = https://github.com/yusuke-arai/simple_http_check.git
+	branch = master

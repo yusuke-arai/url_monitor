@@ -1,0 +1,5 @@
+# Database file
+/db/
+
+# Config file
+/config.json
