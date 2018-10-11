@@ -7,7 +7,8 @@ CREATE TABLE urls (
     url TEXT NOT NULL,
     timeout INTEGER NOT NULL,
     status_code INTEGER NOT NULL,
-    message TEXT NOT NULL
+    message TEXT NOT NULL,
+    modified INTEGER
 );
 
 CREATE TABLE logs (

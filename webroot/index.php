@@ -33,6 +33,7 @@ const check = () => {
 <th>URL</th>
 <th>Timeout(sec)</th>
 <th>Status</th>
+<th>Last check</th>
 <th>Delete</th>
 </tr>
 </thead>
@@ -43,6 +44,7 @@ const check = () => {
 <td><input type="text" name="url[]" value="<?= $url['url'] ?>"></td>
 <td><input type="text" name="timeout[]" value="<?= $url['timeout'] ?>"></td>
 <td><?= $url['message'] ?></td>
+<td><?= !empty($url['modified']) ? (new DateTime())->setTimestamp(intval(preg_replace('/.*:/', '', $url['modified'])))->format('Y/m/d H:i:s') : '-' ?></td>
 <td><button type="button" onclick="delete_func(<?= $url['id'] ?>);">Del</button></td>
 </tr>
 <?php endwhile; ?>
@@ -50,6 +52,7 @@ const check = () => {
 <td><input type="text" name="desc[]" value=""></td>
 <td><input type="text" name="url[]" value=""></td>
 <td><input type="text" name="timeout[]" value="10"></td>
+<td></td>
 <td></td>
 <td></td>
 </tr>
