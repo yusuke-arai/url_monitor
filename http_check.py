@@ -54,7 +54,7 @@ def main():
         (id, desc, url, timeout, prev_status) = row
         res_json = subprocess.check_output([dir_path + '/simple_http_check/bin/simple_http_check', url])
         res = json.loads(res_json)
-        date = datetime.now().strftime("%y/%m/%d %h:%m:%s")
+        date = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
 
         db = sqlite3.connect(db_file, isolation_level='EXCLUSIVE')
         if 'curl_error_code' in res:

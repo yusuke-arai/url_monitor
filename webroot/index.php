@@ -44,7 +44,7 @@ const check = () => {
 <td><input type="text" name="url[]" value="<?= $url['url'] ?>"></td>
 <td><input type="text" name="timeout[]" value="<?= $url['timeout'] ?>"></td>
 <td><?= $url['message'] ?></td>
-<td><?= !empty($url['modified']) ? (new DateTime())->setTimestamp(intval(preg_replace('/.*:/', '', $url['modified'])))->format('Y/m/d H:i:s') : '-' ?></td>
+<td><?= !empty($url['modified']) ? $url['modified'] : '-' ?></td>
 <td><button type="button" onclick="delete_func(<?= $url['id'] ?>);">Del</button></td>
 </tr>
 <?php endwhile; ?>
