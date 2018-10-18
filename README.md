@@ -25,3 +25,8 @@ Publish via web server.
 Set the document root to `webroot` directory.
 
 To monitor periodically, add a schedule to cron.
+For example, as follows.
+```
+*/5 * * * * python2 /path/to/url_monitor/http_check.py
+0 0 * * * python2 /path/to/url_monitor/delete_old_logs.py
+```
