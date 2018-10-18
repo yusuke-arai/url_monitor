@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pprint import pprint
 from datetime import datetime
-import base64
 import json
 import os
 import smtplib
