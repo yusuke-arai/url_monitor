@@ -35,6 +35,7 @@ const check = () => {
 <th>Status</th>
 <th>Last check</th>
 <th>Delete</th>
+<th>Graph</th>
 </tr>
 </thead>
 <tbody>
@@ -45,13 +46,15 @@ const check = () => {
 <td><input type="text" name="timeout[]" value="<?= $url['timeout'] ?>"></td>
 <td><?= $url['message'] ?></td>
 <td><?= !empty($url['modified']) ? $url['modified'] : '-' ?></td>
-<td><button type="button" onclick="delete_func(<?= $url['id'] ?>);">Del</button></td>
+<td style="text-align: center;"><button type="button" onclick="delete_func(<?= $url['id'] ?>);">Del</button></td>
+<td style="text-align: center;"><a href="graph.php?id=<?= $url['id'] ?>" target="_blank">open</a></td>
 </tr>
 <?php endwhile; ?>
 <tr>
 <td><input type="text" name="desc[]" value=""></td>
 <td><input type="text" name="url[]" value=""></td>
 <td><input type="text" name="timeout[]" value="10"></td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
