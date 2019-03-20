@@ -12,7 +12,8 @@ else
     "smtp_host": "localhost",
     "smtp_port": 25,
     "mail_from": "admin@example.com",
-    "mail_to": [ "admin@example.com" ]
+    "mail_to": [ "admin@example.com" ],
+    "mail_footer": "https://<your server>/path/to/webroot/"
 }
 EOL
     echo "Please edit config.json."
