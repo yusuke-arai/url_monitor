@@ -10,7 +10,7 @@ from email.header import Header
 import sqlite3
 import subprocess
 
-def send_mail(mail_from, mail_to, desc, url, date, msg, failure, smtp_host='localhost', smtp_port=25):
+def send_mail(mail_from, mail_to, mail_footer, desc, url, date, msg, failure, smtp_host='localhost', smtp_port=25):
     if (failure):
         mail_subject = u'[URL Error] %s' %(desc)
         status = 'ERROR'
@@ -24,8 +24,8 @@ Date  : %s
 Status: %s
 Error : %s
 
-https://pandora.youworks.com/url_check/
-''' %(desc, url, date, status, msg)
+%s
+''' %(desc, url, date, status, msg, mail_footer)
 
     mail_data = MIMEText(mail_body, 'plain', 'utf-8')
     mail_data['From'] = mail_from
@@ -62,7 +62,7 @@ def main():
                 {"id": id, "status_code": res['curl_error_code'], "message": res['curl_error_msg'], "modified": date})
 
             if (prev_status <= 0):
-                send_mail(config['mail_from'], config['mail_to'], desc, url, date, res['curl_error_msg'], True, smtp_host=config['smtp_host'], smtp_port=config['smtp_port'])
+                send_mail(config['mail_from'], config['mail_to'], config['mail_footer'], desc, url, date, res['curl_error_msg'], True, smtp_host=config['smtp_host'], smtp_port=config['smtp_port'])
 
         elif res['response_code'] >= 300:
             db.execute("INSERT INTO logs (url_id, date, curl_status_code, message, name_lookup_ms, connect_ms, ssl_connect_ms, start_transfer_ms, total_ms) " +
@@ -77,7 +77,7 @@ def main():
                 {"id": id, "status_code": res['response_code'], "message": msg, "modified": date})
 
             if (prev_status <= 0):
-                send_mail(config['mail_from'], config['mail_to'], desc, url, date, msg, True, smtp_host=config['smtp_host'], smtp_port=config['smtp_port'])
+                send_mail(config['mail_from'], config['mail_to'], config['mail_footer'], desc, url, date, msg, True, smtp_host=config['smtp_host'], smtp_port=config['smtp_port'])
 
         else:
             db.execute("INSERT INTO logs (url_id, date, curl_status_code, message, name_lookup_ms, connect_ms, ssl_connect_ms, start_transfer_ms, total_ms) " +
@@ -91,7 +91,7 @@ def main():
                 {"id": id, "status_code": 0, "message": 'Ok', "modified": date})
 
             if (prev_status > 0):
-                send_mail(config['mail_from'], config['mail_to'], desc, url, date, 'Ok', False, smtp_host=config['smtp_host'], smtp_port=config['smtp_port'])
+                send_mail(config['mail_from'], config['mail_to'], config['mail_footer'], desc, url, date, 'Ok', False, smtp_host=config['smtp_host'], smtp_port=config['smtp_port'])
 
         db.commit()
         db.close()
