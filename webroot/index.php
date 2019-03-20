@@ -32,6 +32,7 @@ const check = () => {
 <th>Name</th>
 <th>URL</th>
 <th>Timeout(sec)</th>
+<th>Retry</th>
 <th>Status</th>
 <th>Last check</th>
 <th>Delete</th>
@@ -43,7 +44,8 @@ const check = () => {
 <tr class="<?= $url['status_code'] == 0 ? 'green' : ($url['status_code'] > 0 ? 'red' : '') ?>">
 <td><input type="text" name="desc[]" value="<?= $url['desc'] ?>"><input type="hidden" name="id[]" value="<?= $url['id'] ?>"></td>
 <td><input type="text" name="url[]" value="<?= $url['url'] ?>"></td>
-<td><input type="text" name="timeout[]" value="<?= $url['timeout'] ?>"></td>
+<td><input type="number" name="timeout[]" value="<?= $url['timeout'] ?>" min="0"></td>
+<td><input type="number" name="retry[]" value="<?= $url['retry'] ?>" min="0"></td>
 <td><?= $url['message'] ?></td>
 <td><?= !empty($url['modified']) ? $url['modified'] : '-' ?></td>
 <td style="text-align: center;"><button type="button" onclick="delete_func(<?= $url['id'] ?>);">Del</button></td>
@@ -53,7 +55,8 @@ const check = () => {
 <tr>
 <td><input type="text" name="desc[]" value=""></td>
 <td><input type="text" name="url[]" value=""></td>
-<td><input type="text" name="timeout[]" value="10"></td>
+<td><input type="number" name="timeout[]" value="10" min="0"></td>
+<td><input type="number" name="retry[]" value="0" min="0"></td>
 <td></td>
 <td></td>
 <td></td>

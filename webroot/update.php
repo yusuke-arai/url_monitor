@@ -9,19 +9,21 @@ if (!empty($_REQUEST)) {
         if (empty($_REQUEST["desc"][$index]) || empty($_REQUEST["url"][$index]) ) continue;
 
         if (!empty($_REQUEST["id"][$index])) {
-            $stmt = $db->prepare("UPDATE urls SET desc = :desc, url = :url, timeout = :timeout WHERE id = :id");
+            $stmt = $db->prepare("UPDATE urls SET desc = :desc, url = :url, timeout = :timeout, retry = :retry WHERE id = :id");
             $stmt->bindValue(':id', $_REQUEST["id"][$index], SQLITE3_INTEGER);
             $stmt->bindValue(':desc', $_REQUEST["desc"][$index], SQLITE3_TEXT);
             $stmt->bindValue(':url', $_REQUEST["url"][$index], SQLITE3_TEXT);
             $stmt->bindValue(':timeout', intval($_REQUEST["timeout"][$index]), SQLITE3_INTEGER);
+            $stmt->bindValue(':retry', intval($_REQUEST["retry"][$index]), SQLITE3_INTEGER);
             $stmt->execute();
             $stmt->close();
             unset($stmt);
         } else {
-            $stmt = $db->prepare("INSERT INTO urls (desc, url, timeout, status_code, message) VALUES (:desc, :url, :timeout, -1, '-')");
+            $stmt = $db->prepare("INSERT INTO urls (desc, url, timeout, retry, status_code, message) VALUES (:desc, :url, :timeout, :retry, -1, '-')");
             $stmt->bindValue(':desc', $_REQUEST["desc"][$index], SQLITE3_TEXT);
             $stmt->bindValue(':url', $_REQUEST["url"][$index], SQLITE3_TEXT);
             $stmt->bindValue(':timeout', intval($_REQUEST["timeout"][$index]), SQLITE3_INTEGER);
+            $stmt->bindValue(':retry', intval($_REQUEST["retry"][$index]), SQLITE3_INTEGER);
             $stmt->execute();
             $stmt->close();
             unset($stmt);
