@@ -6,6 +6,7 @@ CREATE TABLE urls (
     desc TEXT NOT NULL,
     url TEXT NOT NULL,
     timeout INTEGER NOT NULL,
+    retry INTEGER NOT NULL,
     status_code INTEGER NOT NULL,
     message TEXT NOT NULL,
     modified INTEGER

@@ -45,13 +45,18 @@ def main():
     db_file = config['db_file']
 
     db = sqlite3.connect(db_file)
-    urls = db.execute("SELECT id, desc, url, timeout, status_code FROM urls;").fetchall()
+    urls = db.execute("SELECT id, desc, url, timeout, retry, status_code FROM urls;").fetchall()
     db.close()
 
     for row in urls:
-        (id, desc, url, timeout, prev_status) = row
-        res_json = subprocess.check_output([dir_path + '/simple_http_check/bin/simple_http_check', url])
-        res = json.loads(res_json)
+        (id, desc, url, timeout, retry, prev_status) = row
+
+        for retry_count in range(0, retry + 1):
+            res_json = subprocess.check_output([dir_path + '/simple_http_check/bin/simple_http_check', url])
+            res = json.loads(res_json)
+            if not 'curl_error_code' in res:
+                break
+
         date = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
 
         db = sqlite3.connect(db_file, isolation_level='EXCLUSIVE')
