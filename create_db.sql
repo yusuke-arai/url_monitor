@@ -7,7 +7,9 @@ CREATE TABLE urls (
     url TEXT NOT NULL,
     timeout INTEGER NOT NULL,
     retry INTEGER NOT NULL,
+    alert_on_errors_continue BOOLEAN NOT NULL,
     status_code INTEGER NOT NULL,
+    errors_count INTEGER NOT NULL,
     message TEXT NOT NULL,
     modified INTEGER
 );
